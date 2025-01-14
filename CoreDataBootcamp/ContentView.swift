@@ -5,14 +5,16 @@
 //  Created by Thomas on 1/14/25.
 //
 
-import SwiftUI
 import CoreData
+import SwiftUI
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)
+        ],
         animation: .default)
     private var items: FetchedResults<Item>
 
@@ -21,24 +23,22 @@ struct ContentView: View {
             List {
                 ForEach(items) { item in
                     NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
+                        Text(
+                            "Item at \(item.timestamp!, formatter: itemFormatter)"
+                        )
                     } label: {
                         Text(item.timestamp!, formatter: itemFormatter)
                     }
                 }
                 .onDelete(perform: deleteItems)
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
+            .navigationTitle("Fruits")
+            .navigationBarItems(
+                trailing:
                     Button(action: addItem) {
                         Label("Add Item", systemImage: "plus")
                     }
-                }
-            }
-            Text("Select an item")
+            )
         }
     }
 
@@ -82,5 +82,7 @@ private let itemFormatter: DateFormatter = {
 }()
 
 #Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    ContentView().environment(
+        \.managedObjectContext,
+        PersistenceController.preview.container.viewContext)
 }
