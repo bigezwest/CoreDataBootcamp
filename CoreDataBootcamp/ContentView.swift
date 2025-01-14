@@ -10,25 +10,14 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)
-        ],
-        animation: .default)
-    private var items: FetchedResults<Item>
+    
+    @FetchRequest(entity: FruitEntity.entity(), sortDescriptors: []) var fruits: FetchedResults<FruitEntity>
 
     var body: some View {
         NavigationView {
             List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text(
-                            "Item at \(item.timestamp!, formatter: itemFormatter)"
-                        )
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
-                    }
+                ForEach(fruits) { fruit in
+                    Text(fruit.name ?? "")
                 }
                 .onDelete(perform: deleteItems)
             }
@@ -44,8 +33,8 @@ struct ContentView: View {
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+//            let newItem = Item(context: viewContext)
+//            newItem.timestamp = Date()
 
             do {
                 try viewContext.save()
@@ -60,7 +49,7 @@ struct ContentView: View {
 
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
+//            offsets.map { items[$0] }.forEach(viewContext.delete)
 
             do {
                 try viewContext.save()
